@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 function App() {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(null);
   const [firstNumber, setFirstNumber] = useState(null);
   const [secondNumber, setSecondNumber] = useState(null);
   const [onFirstNum, toggleFirstBoolean] = useState(true);
@@ -33,35 +33,53 @@ function App() {
       const value = e.target.innerText;
       if (value === "x") {
         setAction("multiply");
+        if (firstNumber !== null) {
+          toggleFirstBoolean(false);
+        }
       } else if (value === "-") {
         setAction("subtract");
+        if (firstNumber !== null) {
+          toggleFirstBoolean(false);
+        }
       } else if (value === "+") {
         setAction("add");
+        if (firstNumber !== null) {
+          toggleFirstBoolean(false);
+        }
       } else if (value === "/") {
         setAction("divide");
+        if (firstNumber !== null) {
+          toggleFirstBoolean(false);
+        }
       } else if (value === "=") {
         setDisplay(total);
-        setFirstNumber(total);
+        setFirstNumber(null);
         setSecondNumber(null);
+        toggleFirstBoolean(true);
         setAction(null);
-        toggleFirstBoolean(false);
+      } else if (value === "AC") {
+        setFirstNumber(null);
+        setSecondNumber(null);
+        setDisplay(null);
+        toggleFirstBoolean(true);
+        setAction(null);
+        setTotal(null);
       } else {
         if (onFirstNum) {
           setFirstNumber(Number(value));
-          toggleFirstBoolean(false);
           setDisplay(value);
         } else {
           setSecondNumber(Number(value));
-          toggleFirstBoolean(true);
           setDisplay(value);
         }
       }
     }
   }
+  const screen = display === null ? 0 : display;
   return (
     <div className="container">
       <div className="calculator-container">
-        <div className="screen">{display}</div>
+        <div className="screen">{screen}</div>
         <div className="buttons" onClick={buttonHandler}>
           <span className="column-one-fourth button">7</span>
           <span className="column-one-fourth button">8</span>
@@ -76,7 +94,7 @@ function App() {
           <span className="column-one-fourth button">3</span>
           <span className="column-one-fourth button">-</span>
           <span className="column-one-fourth button">0</span>
-          <span className="column-one-fourth button">.</span>
+          <span className="column-one-fourth button">AC</span>
           <span className="column-one-fourth button">+</span>
           <span className="column-one-fourth button">=</span>
         </div>
