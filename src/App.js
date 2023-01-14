@@ -2,33 +2,66 @@ import "./App.css";
 import { useState, useEffect } from "react";
 
 function App() {
-  const [product, setProduct] = useState(0);
+  const [display, setDisplay] = useState(0);
   const [firstNumber, setFirstNumber] = useState(null);
   const [secondNumber, setSecondNumber] = useState(null);
   const [onFirstNum, toggleFirstBoolean] = useState(true);
-  function solveHandler() {
-    alert("solved");
-  }
+  const [action, setAction] = useState(null);
+  const [total, setTotal] = useState(null);
+
   useEffect(() => {
     console.log("first:", firstNumber);
     console.log("second:", secondNumber);
+    console.log("action:", action);
+    if (firstNumber !== null && secondNumber !== null && action !== null) {
+      solver(action);
+    }
   });
+  function solver(a) {
+    if (a === "add") {
+      setTotal(firstNumber + secondNumber);
+    } else if (a === "multiply") {
+      setTotal(firstNumber * secondNumber);
+    } else if (a === "subtract") {
+      setTotal(firstNumber - secondNumber);
+    } else if (a === "divide") {
+      setTotal(firstNumber / secondNumber);
+    }
+  }
   function buttonHandler(e) {
     if (e.target.matches("span")) {
-      const number = e.target.innerText;
-      if (onFirstNum) {
-        setFirstNumber(number);
+      const value = e.target.innerText;
+      if (value === "x") {
+        setAction("multiply");
+      } else if (value === "-") {
+        setAction("subtract");
+      } else if (value === "+") {
+        setAction("add");
+      } else if (value === "/") {
+        setAction("divide");
+      } else if (value === "=") {
+        setDisplay(total);
+        setFirstNumber(total);
+        setSecondNumber(null);
+        setAction(null);
         toggleFirstBoolean(false);
       } else {
-        setSecondNumber(number);
-        toggleFirstBoolean(true);
+        if (onFirstNum) {
+          setFirstNumber(Number(value));
+          toggleFirstBoolean(false);
+          setDisplay(value);
+        } else {
+          setSecondNumber(Number(value));
+          toggleFirstBoolean(true);
+          setDisplay(value);
+        }
       }
     }
   }
   return (
     <div className="container">
       <div className="calculator-container">
-        <div className="screen">{product}</div>
+        <div className="screen">{display}</div>
         <div className="buttons" onClick={buttonHandler}>
           <span className="column-one-fourth button">7</span>
           <span className="column-one-fourth button">8</span>
@@ -45,9 +78,7 @@ function App() {
           <span className="column-one-fourth button">0</span>
           <span className="column-one-fourth button">.</span>
           <span className="column-one-fourth button">+</span>
-          <span className="column-one-fourth button" onClick={solveHandler}>
-            =
-          </span>
+          <span className="column-one-fourth button">=</span>
         </div>
       </div>
     </div>
