@@ -45,3 +45,7 @@ body {
 .column-one-fourth {
   flex-basis: 25%;
 }
+
+.button:hover {
+  cursor: pointer;
+}
